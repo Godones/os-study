@@ -10,6 +10,16 @@
 
 [slabmalloc - crates.io: Rust Package Registry](https://crates.io/crates/slabmalloc)
 
+
+
+[emeryberger/Malloc-Implementations: A collection of memory allocators (github.com)](https://github.com/emeryberger/Malloc-Implementations)
+
+
+
+### 测试
+
+[测试内存分配器：ptmalloc2 vs tcmalloc vs hoard vs jemalloc 同时尝试模拟真实世界的负载 - Soft.ware 上的 IT Haare (ithare.com)](http://ithare.com/testing-memory-allocators-ptmalloc2-tcmalloc-hoard-jemalloc-while-trying-to-simulate-real-world-loads/)
+
 ## `object allocator Trait`定义列表
 
 [object-alloc - crates.io: Rust Package Registry](https://crates.io/crates/object-alloc)
@@ -32,7 +42,9 @@
 
 [fat32 - crates.io: Rust Package Registry](https://crates.io/crates/fat32)
 
+[rafalh/rust-fatfs: A FAT filesystem library implemented in Rust. (github.com)](https://github.com/rafalh/rust-fatfs)
 
+[Bryant / fat-rs · GitLab](https://gitlab.com/susurrus/fat-rs)
 
 [vfs - crates.io: Rust Package Registry](https://crates.io/crates/vfs) VFS抽象
 

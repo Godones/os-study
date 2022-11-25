@@ -194,6 +194,20 @@ ExampleStateMachine::WaitingOnFooTxt(state) => {
 
 [Async in depth | Tokio - An asynchronous Rust runtime](https://tokio.rs/tokio/tutorial/async)
 
+200行解释Future
+
 [Introduction - Futures Explained in 200 Lines of Rust (cfsamson.github.io)](https://cfsamson.github.io/books-futures-explained/introduction.html)
 
+一个异步输入的示例同时包含其它讲解
+
 [writing-an-os-in-rust/12-async-await.md at master · rustcc/writing-an-os-in-rust (github.com)](https://github.com/rustcc/writing-an-os-in-rust/blob/master/12-async-await.md)
+
+https://github.com/YdrMaster/notebook/blob/main/translation/20221019-futures-in-200-lines/introduction.md
+
+树莓派操作系统的讲解
+
+[Demystifying Async/Await in Rust - Demystifying Async/Await in Rust (ruspiro.github.io)](https://ruspiro.github.io/ruspiro-async-book/cover.html)
+
+
+
+https://github.com/YdrMaster/fast-trap
