@@ -74,3 +74,12 @@
 
 
 
+[QEMU/Devices - Wikibooks, open books for an open world](https://en.wikibooks.org/wiki/QEMU/Devices)
+
+
+
+## 问题查缺
+
+[解决Windows系统下VNC Viewer无法连接到远程主机上的VNC Server的问题_看星星的小王子的博客-CSDN博客_vnc viewer连接被拒绝](https://blog.csdn.net/liuhuayeyu/article/details/103074197?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-2-103074197-blog-8149978.pc_relevant_3mothn_strategy_and_data_recovery&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-2-103074197-blog-8149978.pc_relevant_3mothn_strategy_and_data_recovery&utm_relevant_index=5)
+
+[QEMU - ArchWiki (archlinux.org)](https://wiki.archlinux.org/title/QEMU)
