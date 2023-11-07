@@ -135,6 +135,8 @@ IDL编译器就是根据这两个标记生成代码。
 
 
 
+
+
 ## 代码分析
 
 ### 域的初始化
@@ -301,8 +303,7 @@ PCI域
 
 
 
-During normal operation, the shadow passes all calls to the real device driver. However, it saves all information required for the recovery
-of the driver (e.g., references to PCI trait, and other parts of the device initialization protocol).
+During normal operation, the shadow passes all calls to the real device driver. However, it saves all information required for the recovery of the driver (e.g., references to PCI trait, and other parts of the device initialization protocol).
 
 ==实现与论文描述不太一致==
 
