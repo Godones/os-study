@@ -37,13 +37,13 @@ make ARCH=arm64 CLANG_TRIPLE=aarch64_linux_gnu LLVM=1 -j
 make LLVM=1  ARCH=riscv defconfig
 make ARCH=riscv LLVM=1 menuconfig
 make ARCH=riscv LLVM=1 -j32
+
+# 生成编辑器索引文件
 make LLVM=1 ARCH=riscv rust-analyzer
 bear -- make ARCH=riscv LLVM=1 -j12
 ```
 
 
-
-https://blog.csbxd.fun/archives/1699538198511
 
 ## Linux on riscv
 
@@ -130,3 +130,137 @@ $ sudo vi rcS
 ```
 
 https://gitee.com/YJMSTR/riscv-linux/blob/master/articles/20220816-introduction-to-qemu-and-riscv-upstream-boot-flow.md
+
+
+
+## 加载内核模块
+
+在使用`make ARCH=riscv LLVM=1 menuconfig` 进行配置时，我们可以选择开启编译一些内核内置的rust模块
+
+这些模块被编译后不会和内核镜像绑定在一起，因此我们需要手动将其拷贝到制作的文件系统中，在文件系统中，使用insmod相关的命令加载和卸载这些模块。
+
+`make ARCH=riscv LLVM=1 modules_install` 这个命令会把编译的内核模块拷贝到本机目录下，因此通常不使用
+
+`make ARCH=riscv LLVM=1 modules` 只会编译选择的内核模块
+
+
+
+## 构建ubuntu镜像
+
+为了后续方便在系统上进行测试，构建一个ubuntu/debian镜像是必须的。这样一来就可以使用常见的性能测试工具。
+
+依赖安装：
+
+```
+sudo apt install debootstrap qemu qemu-user-static binfmt-support
+```
+
+生成最小 bootstrap rootfs 
+
+```
+sudo debootstrap --arch=riscv64 --foreign jammy ./temp-rootfs http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports
+```
+
+拷贝qemu-riscv64-static到rootfs中
+
+```
+cp /usr/bin/qemu-riscv64-static ./temp-rootfs/usr/bin/
+```
+
+ chroot 和 debootstrap
+
+```
+wget https://raw.githubusercontent.com/ywhs/linux-software/master/ch-mount.sh
+chmod 777 ch-mount.sh
+./ch-mount.sh -m temp-rootfs/
+# 执行脚本后，没有报错会进入文件系统，显示 I have no name ，这是因为还没有初始化。
+debootstrap/debootstrap --second-stage
+exit
+./ch-mount.sh -u temp-rootfs/
+./ch-mount.sh -m temp-rootfs/
+```
+
+这里如果在WSL2进行实验，可能会遇到无法chroot的情况。issue https://github.com/microsoft/WSL/issues/2103#issuecomment-1829496706给出了解决办法。
+
+修改软件源：
+
+```
+deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ jammy main restricted universe multiverse
+deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ jammy-updates main restricted universe multiverse
+deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ jammy-backports main restricted universe multiverse
+deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ jammy-security main restricted universe multiverse
+```
+
+安装常见的工具
+
+```
+apt-get update
+apt-get install --no-install-recommends -y util-linux haveged openssh-server systemd kmod initramfs-tools conntrack ebtables ethtool iproute2 iptables mount socat ifupdown iputils-ping vim dhcpcd5 neofetch sudo chrony
+```
+
+
+
+制作ext4的镜像
+
+```
+dd if=/dev/zero of=rootfs_ubuntu_riscv.ext4 bs=1M count=4096
+mkfs.ext4 rootfs_ubuntu_riscv.ext4
+mkdir -p tmpfs
+sudo mount -t ext4 rootfs_ubuntu_riscv.ext4 tmpfs/ -o loop
+sudo cp -af temp-rootfs/* tmpfs/
+sudo umount tmpfs
+chmod 777 rootfs_ubuntu_riscv.ext4
+```
+
+使用ssh连接启动的qemu
+
+https://copyright1999.github.io/2023/10/03/wsl%E5%A6%82%E4%BD%95ssh%E5%88%B0qemu/
+
+启动`qemu`之后，还要在我们`qemu`模拟的`debian`中做好`ssh`相关的配置，在`/etc/ssh/sshd_config`中加上一句
+
+```
+PermitRootLogin yes
+```
+
+然后重启`ssh`相关服务
+
+```
+service ssh restart
+```
+
+设置内核模块输出到控制台
+
+https://blog.csdn.net/dp__mcu/article/details/119887176
+
+http://www.only2fire.com/archives/27.html
+
+将linux编译的内核模块安装到文件系统中：
+
+```
+sudo make ARCH=riscv LLVM=1 modules_install INSTALL_MOD_PATH=../mnt/kmod
+```
+
+
+
+https://blog.csdn.net/jingyu_1/article/details/135822574
+
+https://cloud.tencent.com/developer/article/1914743
+
+https://blog.csdn.net/xuesong10210/article/details/129167731
+
+## 编写内核模块
+
+c内核模块https://linux-kernel-labs-zh.xyz/labs/kernel_modules.html
+
+
+
+
+
+
+
+## Reference
+
+[编译 linux for rust 并制作 initramfs 最后编写 rust_helloworld 内核驱动 并在 qemu 环境加载](https://blog.csbxd.fun/archives/1699538198511)
+
+[内核模块入门](https://github.com/ljrcore/linuxmooc/blob/master/%E7%B2%BE%E5%BD%A9%E6%96%87%E7%AB%A0/%E6%96%B0%E6%89%8B%E4%B8%8A%E8%B7%AF%EF%BC%9A%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97%E5%85%A5%E9%97%A8.md)
+
